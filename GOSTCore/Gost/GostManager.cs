@@ -101,7 +101,8 @@ namespace GOSTCore.Gost
         /// </summary>
         private bool released;
 
-        public GostManager(byte[] key, byte[] iv, byte[] message, CipherTypes cipherType = CipherTypes.Substitution, SBlockTypes sBlockType = SBlockTypes.GOST)
+        public GostManager(byte[] key, byte[] iv, byte[] message, CipherTypes cipherType = CipherTypes.Substitution,
+            SBlockTypes sBlockType = SBlockTypes.GOST)
         {
             released = false;
             _subKeys = new List<uint>();
@@ -122,11 +123,15 @@ namespace GOSTCore.Gost
         /// <returns></returns>
         public byte[] Encode()
         {
-            byte[] res = new byte[_message.Length];
+            var res = new byte[_message.Length];
 
-            foreach (var item in ReadByChunk().Select((chunk, i) => new { i, chunk }))
+            var i = -1;
+
+            foreach (var item in ReadByChunk())
             {
-                Array.Copy(_cipher.Encode(_message, _subKeys), 0, res, item.i, item.chunk.Length);
+                Array.Copy(_cipher.Encode(item, _subKeys), 0, res, i + 1, item.Length);
+
+                i += item.Length;
             }
 
             return res;
@@ -138,11 +143,15 @@ namespace GOSTCore.Gost
         /// <returns></returns>
         public byte[] Decode()
         {
-            byte[] res = new byte[_message.Length];
+            var res = new byte[_message.Length];
 
-            foreach (var item in ReadByChunk().Select((chunk, i) => new { i, chunk }))
+            var i = -1;
+
+            foreach (var item in ReadByChunk())
             {
-                Array.Copy(_cipher.Decode(_message, _subKeys), 0, res, item.i, item.chunk.Length);
+                Array.Copy(_cipher.Decode(item, _subKeys), 0, res, i + 1, item.Length);
+
+                i += item.Length;
             }
 
             return res;
@@ -154,12 +163,13 @@ namespace GOSTCore.Gost
         /// <returns></returns>
         public byte[] Generate()
         {
-            byte[] res = new byte[8];
+            var res = new byte[8];
 
-            foreach (var item in ReadByChunk().Select((chunk, i) => new { i, chunk }))
+            foreach (var item in ReadByChunk().Select((chunk, i) => new {i, chunk}))
             {
                 res = new MacGenerator(_sBlock).Generate(item.chunk, _subKeys);
             }
+
             return res;
         }
 
@@ -168,10 +178,12 @@ namespace GOSTCore.Gost
         /// </summary>
         private void GenerateSubKeys()
         {
-            byte[] res = new byte[4];
+            var res = new byte[4];
+
             // Stage 1.
-            int j = 0;
-            for (int i = 0; i != _key.Length; i++)
+            var j = 0;
+
+            for (var i = 0; i != _key.Length; i++)
             {
                 res[j] = _key[i];
 
@@ -185,13 +197,15 @@ namespace GOSTCore.Gost
                     j++;
                 }
             }
+
             // Stage 2.
-            for (int i = 0; i != 16; i++)
+            for (var i = 0; i != 16; i++)
             {
                 _subKeys.Add(_subKeys[i]);
             }
+
             // Stage 3.
-            for (int i = 7; i != -1; i--)
+            for (var i = 7; i != -1; i--)
             {
                 _subKeys.Add(_subKeys[i]);
             }
@@ -203,11 +217,11 @@ namespace GOSTCore.Gost
         /// <returns>At least 64 bit block.</returns>
         private IEnumerable<byte[]> ReadByChunk()
         {
-            for (int i = 0; i < _message.Length; i += 8)
+            for (var i = 0; i < _message.Length; i += 8)
             {
                 var min = Math.Min(8, _message.Length - i);
 
-                byte[] res = new byte[min];
+                var res = new byte[min];
 
                 Array.Copy(_message, i, res, 0, min);
 

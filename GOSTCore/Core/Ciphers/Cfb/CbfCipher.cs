@@ -23,12 +23,12 @@ namespace GOSTCore.Core.Ciphers.Cfb
         /// <returns>Encoded message.</returns>
         public new byte[] Encode(byte[] data, List<uint> subKeys)
         {
-            byte[] gamma = new byte[8];
+            var gamma = new byte[8];
             Array.Copy(BitConverter.GetBytes(n1), 0, gamma, 0, 4);
             Array.Copy(BitConverter.GetBytes(n2), 0, gamma, 4, 4);
             gamma = base.Encode(gamma, subKeys);
 
-            byte[] res = XOR(gamma, data);
+            var res = XOR(gamma, data);
 
             if (res.Length == 8)
             {
@@ -47,12 +47,12 @@ namespace GOSTCore.Core.Ciphers.Cfb
         /// <returns>Opened message.</returns>
         public new byte[] Decode(byte[] data, List<uint> subKeys)
         {
-            byte[] gamma = new byte[8];
+            var gamma = new byte[8];
             Array.Copy(BitConverter.GetBytes(n1), 0, gamma, 0, 4);
             Array.Copy(BitConverter.GetBytes(n2), 0, gamma, 4, 4);
             gamma = base.Encode(gamma, subKeys);
 
-            byte[] res = XOR(gamma, data);
+            var res = XOR(gamma, data);
 
             if (data.Length == 8)
             {
@@ -81,12 +81,12 @@ namespace GOSTCore.Core.Ciphers.Cfb
         /// <returns>XOR result..</returns>
         private byte[] XOR(byte[] gamma, byte[] data)
         {
-            int len = data.Length;
-            byte[] res = new byte[len];
+            var len = data.Length;
+            var res = new byte[len];
 
-            for (int i = 0; i != len; i++)
+            for (var i = 0; i != len; i++)
             {
-                res[i] = (byte)(gamma[i] ^ data[i]);
+                res[i] = (byte) (gamma[i] ^ data[i]);
             }
 
             return res;

@@ -17,6 +17,7 @@ namespace GOSTCore
             CheckData(key, message);
 
             using var gost = new GostManager(key, null, message);
+
             return gost.Generate();
         }
 

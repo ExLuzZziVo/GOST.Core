@@ -17,7 +17,7 @@ namespace GOSTCore.Gost.Factories
                 SBlockTypes.CryptoProD => new CryptoProDBlock(),
                 SBlockTypes.TC26 => new Tc26Block(),
                 SBlockTypes.GOST => new GostBlock(),
-                _ => throw new ArgumentException(nameof(sBlock)),
+                _ => throw new ArgumentException(nameof(sBlock))
             };
         }
     }

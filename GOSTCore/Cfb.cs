@@ -20,6 +20,7 @@ namespace GOSTCore
             CheckData(key, iv, message);
 
             using var gost = new GostManager(key, iv, message, CipherTypes.Cfb, sBlockType);
+
             return gost.Encode();
         }
 
@@ -55,6 +56,7 @@ namespace GOSTCore
             CheckData(key, iv, message);
 
             using var gost = new GostManager(key, iv, message, CipherTypes.Cfb, sBlockType);
+
             return gost.Decode();
         }
 

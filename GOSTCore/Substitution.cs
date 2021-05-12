@@ -24,6 +24,7 @@ namespace GOSTCore
             }
 
             using var gost = new GostManager(key, null, message, CipherTypes.Substitution, sBlockType);
+
             return gost.Encode();
         }
 
@@ -61,6 +62,7 @@ namespace GOSTCore
             }
 
             using var gost = new GostManager(key, null, message, CipherTypes.Substitution, sBlockType);
+
             return gost.Decode();
         }
 

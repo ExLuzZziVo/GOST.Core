@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using GOSTCore.Core.Ciphers.Substitution;
 using GOSTCore.Core.SBlocks.IBlock;
 
@@ -30,12 +29,14 @@ namespace GOSTCore.Core.Generators.Mac
         {
             if (data.Length != 8)
             {
-                byte[] temp = new byte[8];
+                var temp = new byte[8];
                 Array.Copy(data, 0, temp, 0, data.Length);
-                for (int i = data.Length - 1; i != 8; i++)
+
+                for (var i = data.Length - 1; i != 8; i++)
                 {
                     temp[i] = 0;
                 }
+
                 data = temp;
             }
 
@@ -48,9 +49,9 @@ namespace GOSTCore.Core.Generators.Mac
             }
             else if (round != null)
             {
-                for (int i = 0; i != 8; i++)
+                for (var i = 0; i != 8; i++)
                 {
-                    round[i] = (byte)(round[i] ^ data[i]);
+                    round[i] = (byte) (round[i] ^ data[i]);
                 }
 
                 n1 = BitConverter.ToUInt32(round, 0);
@@ -71,7 +72,7 @@ namespace GOSTCore.Core.Generators.Mac
         /// <returns>Result.</returns>
         private byte[] ShortSubstitute(uint little, uint big, List<uint> subKeys)
         {
-            for (int i = 0; i != 16; i++)
+            for (var i = 0; i != 16; i++)
             {
                 var round = big ^ substitution.Function(little, subKeys[i]);
 
@@ -79,9 +80,10 @@ namespace GOSTCore.Core.Generators.Mac
                 little = round;
             }
 
-            byte[] result = new byte[8];
+            var result = new byte[8];
             Array.Copy(BitConverter.GetBytes(little), 0, result, 0, 4);
             Array.Copy(BitConverter.GetBytes(big), 0, result, 4, 4);
+
             return result;
         }
     }

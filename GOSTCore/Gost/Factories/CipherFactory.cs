@@ -18,7 +18,7 @@ namespace GOSTCore.Gost.Factories
                 CipherTypes.Substitution => new SubstitutionCipher(sBlock),
                 CipherTypes.Cfb => new CbfCipher(iv, sBlock),
                 CipherTypes.Xor => new XorCipher(iv, subKeys, sBlock),
-                _ => throw new ArgumentException(nameof(cipher)),
+                _ => throw new ArgumentException(nameof(cipher))
             };
         }
     }

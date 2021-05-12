@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GOSTCore.Gost.Types
+﻿namespace GOSTCore.Gost.Types
 {
     /// <summary>
     /// Enum of STables

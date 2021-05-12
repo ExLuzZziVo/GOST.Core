@@ -26,10 +26,10 @@ namespace GOSTCore.Core.Ciphers.Xor
             n3 += 16843009 % 4294967295;
             n4 += 16843012 % 4294967294;
 
-            uint n1 = n3;
-            uint n2 = n4;
+            var n1 = n3;
+            var n2 = n4;
 
-            byte[] gamma = new byte[8];
+            var gamma = new byte[8];
             Array.Copy(BitConverter.GetBytes(n1), 0, gamma, 0, 4);
             Array.Copy(BitConverter.GetBytes(n2), 0, gamma, 4, 4);
             gamma = base.Encode(gamma, subKeys);
@@ -43,7 +43,10 @@ namespace GOSTCore.Core.Ciphers.Xor
         /// <param name="data">Encoded data</param>
         /// <param name="subKeys">Subkeys</param>
         /// <returns>Decoded data</returns>
-        public new byte[] Decode(byte[] data, List<uint> subKeys) => Encode(data, subKeys);
+        public new byte[] Decode(byte[] data, List<uint> subKeys)
+        {
+            return Encode(data, subKeys);
+        }
 
         /// <summary>
         /// Set cipher init state.
@@ -52,7 +55,7 @@ namespace GOSTCore.Core.Ciphers.Xor
         /// <param name="subKeys">Subkeys</param>
         private void SetIV(byte[] iv, List<uint> subKeys)
         {
-            byte[] encodedIV = base.Encode(iv, subKeys);
+            var encodedIV = base.Encode(iv, subKeys);
 
             n3 = BitConverter.ToUInt32(encodedIV, 0);
             n4 = BitConverter.ToUInt32(encodedIV, 4);
@@ -66,12 +69,12 @@ namespace GOSTCore.Core.Ciphers.Xor
         /// <returns>Result</returns>
         private byte[] XOR(byte[] gamma, byte[] data)
         {
-            int len = data.Length;
-            byte[] res = new byte[len];
+            var len = data.Length;
+            var res = new byte[len];
 
-            for (int i = 0; i != len; i++)
+            for (var i = 0; i != len; i++)
             {
-                res[i] = (byte)(gamma[i] ^ data[i]);
+                res[i] = (byte) (gamma[i] ^ data[i]);
             }
 
             return res;
